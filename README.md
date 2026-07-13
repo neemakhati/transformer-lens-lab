@@ -17,6 +17,7 @@ Anyone can wrap an OpenAI API call. Understanding what happens inside the 12 tra
 | `tlab.attention_viz` | Visualizes attention patterns per head/layer | ✅ |
 | `tlab.logit_lens` | Decodes intermediate residual stream states into vocabulary space | ✅ |
 | `tlab.patching` | Activation patching for causal attribution ("which layer caused this output?") | ✅ |
+| `tlab.app` | Interactive Streamlit demo tying the above together | ✅ |
 
 Each module ships with a short writeup in `docs/` explaining *what we found*, not just what the code does.
 
@@ -56,6 +57,15 @@ Each module ships with a short writeup in `docs/` explaining *what we found*, no
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
+```
+
+## Interactive demo
+
+Type any prompt and see attention patterns and the logit lens trajectory update live:
+
+```bash
+pip install -e ".[app]"
+streamlit run src/tlab/app.py
 ```
 
 ## Background reading this project is built on
