@@ -36,11 +36,28 @@ def main() -> None:
 
     bundle = get_bundle()
 
-    prompt = st.text_input("Prompt", value="The capital of France is")
-    target_token = st.text_input(
-        "Track a specific next token (must be a single GPT-2 token, e.g. ' Paris' with a leading space)",
-        value=" Paris",
-    )
+    with st.form("prompt_form"):
+        prompt = st.text_input("Prompt", value="The capital of France is")
+        target_token = st.text_input(
+            "Track a specific next token (must be a single GPT-2 token, e.g. ' Paris' with a leading space)",
+            value=" Paris",
+        )
+        submitted = st.form_submit_button("Run")
+
+    # st.form batches both inputs and only reruns the script once, on submit --
+    # this avoids the confusing "output looks stale relative to what I just
+    # typed" mid-edit state a plain st.text_input has, since Streamlit reruns
+    # on every keystroke's blur otherwise, one widget at a time.
+    if not submitted and "last_prompt" not in st.session_state:
+        st.info("Enter a prompt above and click Run.")
+        st.stop()
+
+    if submitted:
+        st.session_state["last_prompt"] = prompt
+        st.session_state["last_target"] = target_token
+
+    prompt = st.session_state["last_prompt"]
+    target_token = st.session_state["last_target"]
 
     if not prompt.strip():
         st.stop()

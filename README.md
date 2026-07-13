@@ -65,8 +65,15 @@ Type any prompt and see attention patterns and the logit lens trajectory update 
 
 ```bash
 pip install -e ".[app]"
-streamlit run src/tlab/app.py
+streamlit run src/tlab/app.py --server.fileWatcherType none
 ```
+
+`--server.fileWatcherType none` avoids a known crash: `transformers` ships
+optional vision-model submodules (e.g. ZoeDepth) that import `torchvision`
+lazily, and Streamlit's default file watcher eagerly walks every imported
+module's path on each file change, triggering that import even though this
+project never uses those submodules. Since the demo's code isn't being
+hot-edited during a session, disabling the watcher sidesteps the issue.
 
 ## Background reading this project is built on
 
