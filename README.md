@@ -16,11 +16,21 @@ Anyone can wrap an OpenAI API call. Understanding what happens inside the 12 tra
 | `tlab.hooks` | PyTorch forward hooks to capture activations at any layer | ✅ |
 | `tlab.attention_viz` | Visualizes attention patterns per head/layer | ✅ |
 | `tlab.logit_lens` | Decodes intermediate residual stream states into vocabulary space | ✅ |
-| `tlab.patching` | Activation patching for causal attribution ("which layer caused this output?") | 🚧 |
+| `tlab.patching` | Activation patching for causal attribution ("which layer caused this output?") | ✅ |
 
 Each module ships with a short writeup in `docs/` explaining *what we found*, not just what the code does.
 
 ## Findings so far
+
+- **Layer 9 causally carries the France→Paris association** — activation
+  patching (a real intervention, not just observation) shows patching layer
+  9's residual stream alone recovers 62.5% of the gap between a corrupted
+  and clean prompt's confidence in " Paris"; layers 0–8 recover essentially
+  nothing:
+
+  ![Activation patching recovery by layer](assets/patching_recovery_by_layer.png)
+
+  [Full writeup](docs/05_activation_patching.md) — the project's headline result, and the one place a causal claim (not just a correlational one) is actually justified.
 
 - **GPT-2 "considers" the correct answer, then partially backs away from it.**
   For `"The capital of France is ___"`, the logit lens shows `" Paris"` jumping
@@ -29,7 +39,7 @@ Each module ships with a short writeup in `docs/` explaining *what we found*, no
 
   ![Logit lens trajectory for Paris](assets/logit_lens_paris_trajectory.png)
 
-  [Full writeup](docs/04_logit_lens_paris.md) — this is the project's headline finding so far.
+  [Full writeup](docs/04_logit_lens_paris.md) — activation patching above independently confirms layer 9 is where this originates, not just correlates.
 
 - **The residual stream grows ~8x in norm across 12 layers**, accelerating sharply
   in the final layers — [full writeup](docs/02_residual_stream_growth.md).
