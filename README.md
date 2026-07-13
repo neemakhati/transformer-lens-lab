@@ -14,11 +14,22 @@ Anyone can wrap an OpenAI API call. Understanding what happens inside the 12 tra
 |---|---|---|
 | `tlab.model` | Loads GPT-2 small via HuggingFace, exposes clean internals | ✅ |
 | `tlab.hooks` | PyTorch forward hooks to capture activations at any layer | ✅ |
-| `tlab.attention_viz` | Visualizes attention patterns per head/layer | 🚧 |
+| `tlab.attention_viz` | Visualizes attention patterns per head/layer | ✅ |
 | `tlab.logit_lens` | Decodes intermediate residual stream states into vocabulary space | 🚧 |
 | `tlab.patching` | Activation patching for causal attribution ("which layer caused this output?") | 🚧 |
 
 Each module ships with a short writeup in `docs/` explaining *what we found*, not just what the code does.
+
+## Findings so far
+
+- **The residual stream grows ~8x in norm across 12 layers**, accelerating sharply
+  in the final layers — [full writeup](docs/02_residual_stream_growth.md).
+- **GPT-2 small has genuine "previous-token heads"** — attention heads that
+  reliably copy from exactly one position back, a documented circuit primitive:
+
+  ![Previous-token head attention pattern](assets/attention_previous_token_head.png)
+
+  [Full writeup, including a methodological caveat about over-counting "sink" heads on short prompts](docs/03_attention_patterns.md).
 
 ## Setup
 
