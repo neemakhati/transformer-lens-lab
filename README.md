@@ -12,7 +12,7 @@ Anyone can wrap an OpenAI API call. Understanding what happens inside the 12 tra
 
 | Module | What it does | Status |
 |---|---|---|
-| `tlab.model` | Loads GPT-2 small via HuggingFace, exposes clean internals | 🚧 |
+| `tlab.model` | Loads GPT-2 small via HuggingFace, exposes clean internals | ✅ |
 | `tlab.hooks` | PyTorch forward hooks to capture activations at any layer | 🚧 |
 | `tlab.attention_viz` | Visualizes attention patterns per head/layer | 🚧 |
 | `tlab.logit_lens` | Decodes intermediate residual stream states into vocabulary space | 🚧 |
